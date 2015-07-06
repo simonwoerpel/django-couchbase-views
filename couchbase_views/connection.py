@@ -6,11 +6,11 @@ for convenience this should be imported like ...import CONNECTION as C
 """
 
 from couchbase.bucket import Bucket
-from .settings import CONNECTION_STR
+from .settings import CB_BUCKET, CB_HOST, CB_PASSWORD
 
 
 def db_connection():
-    return Bucket(CONNECTION_STR)
+    return Bucket('http://%s/%s' % (CB_HOST, CB_BUCKET), password=CB_PASSWORD)
 
 CONNECTION = db_connection()
 

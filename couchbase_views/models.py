@@ -7,6 +7,8 @@ Couchbase Docs as Python objects inspired from django.models
 
 import uuid
 
+from django.core.urlresolvers import reverse
+
 from .connection import CONNECTION as C
 # from .views import BaseDesign, BaseView
 
@@ -17,7 +19,7 @@ class BaseCouchbaseDoc(object):
     """
     def __init__(self, doc):
         self.doc = doc
-        self.key = self.doc.key
+        self._key = self.doc.key
 
     def __getattr__(self, name):
         try:
@@ -28,6 +30,12 @@ class BaseCouchbaseDoc(object):
     def __setattr__(self, key, value):
         super().__setattr__(key, value)
         self._update_doc()
+
+    def __str__(self):
+        return self._key
+
+    def __repr__(self):
+        return ': '.join([self.__class__.__name__, self.__str__()])
 
     def _update_doc(self):
         for k, v in self.__dict__.items():
@@ -40,6 +48,9 @@ class BaseCouchbaseDoc(object):
 
     def delete(self):
         C.remove(self.key)
+
+    def get_absolute_url(self):
+        return reverse('cb-document-detail', kwargs={'id': self._key})
 
     @classmethod
     def get(cls, key):

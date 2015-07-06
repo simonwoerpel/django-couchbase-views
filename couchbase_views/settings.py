@@ -7,5 +7,11 @@ Couchbase Settings
 
 from django.conf import settings
 
-CONNECTION_STR = 'couchbase://localhost/%s' % settings.COUCHBASE_BUCKET
-ENTRIES_PER_PAGE = 30
+
+CB = settings.COUCHBASE
+
+CB_HOST = CB['HOST'] if 'HOST' in CB else 'localhost'
+CB_BUCKET = CB['BUCKET'] if 'BUCKET' in CB else 'default'
+CB_PASSWORD = CB['PASSWORD'] if 'PASSWORD' in CB else CB_BUCKET if CB_BUCKET != 'default' else None
+
+
