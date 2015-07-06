@@ -5,7 +5,11 @@ Couchbase designs and views
 """
 
 
+from django.http import Http404
+from django.views.generic import TemplateView
+
 from .connection import CONNECTION as C
+from .models import BaseCouchbaseDoc
 
 
 class BaseView(object):
@@ -45,4 +49,33 @@ class BaseDesign(object):
 
     def publish(self):
         C.design_publish(self.name)
+
+
+class BaseDocumentView(TemplateView):
+    """
+    base view that puts a single couchbase document into the 'object' context variable
+    """
+
+    def get_doc(self):
+        """
+        retrieves the document from couchbase, based by id 
+        submitted via GET
+        """
+        id = self.request.GET.get('id', None)
+        
+        if not id:
+            raise Http404
+
+        try:
+            doc = BaseCouchbaseDoc.get(id)
+        except:
+            raise Http404
+        
+    def get_context_data(self, *args, **kwargs):
+        """
+        adds object to the context
+        """
+        context = super().get_context_data(*args, **kwargs)
+        context['objcect'] = self.get_doc()
+        return context
 

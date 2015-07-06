@@ -8,7 +8,7 @@ Couchbase Docs as Python objects inspired from django.models
 import uuid
 
 from .connection import CONNECTION as C
-from .views import BaseDesign, BaseView
+# from .views import BaseDesign, BaseView
 
 
 class BaseCouchbaseDoc(object):
@@ -85,15 +85,15 @@ class BaseCouchbaseModel(BaseCouchbaseDoc):
     def _design_name(cls):
         return cls.__name__.lower()
 
-    @classmethod
-    def _design(cls):
-        return BaseDesign(cls._design_name())
+    # @classmethod
+    # def _design(cls):
+    #     return BaseDesign(cls._design_name())
 
-    @classmethod
-    def _base_view(cls):
-        view_func = {"map": "function (doc, meta) {\nif (doc.type == '%s') {\n    emit(meta.id, null);\n}}"
-                            % cls.__name__.lower()}
-        return BaseView('all', view_func)
+    # @classmethod
+    # def _base_view(cls):
+    #     view_func = {"map": "function (doc, meta) {\nif (doc.type == '%s') {\n    emit(meta.id, null);\n}}"
+    #                         % cls.__name__.lower()}
+    #     return BaseView('all', view_func)
 
     @classmethod
     def all(cls):
