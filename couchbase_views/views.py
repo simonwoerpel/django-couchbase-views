@@ -83,6 +83,9 @@ class BaseDocumentView(TemplateView):
         if self.doc_type and not validate_doctype(doc, self.get_doc_type()):
             raise Http404
 
+        if doc.type:
+            self.doc_type = doc.type
+
         return doc
         
     def get_context_data(self, *args, **kwargs):
